@@ -3,7 +3,9 @@ package com.levi9.daggerexample.dagger;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import com.levi9.daggerexample.ui.MainActivityFragment;
+
+import com.levi9.daggerexample.communication.CommunicationManager;
+import com.levi9.daggerexample.ui.MainFragment;
 
 /**
  * Created by Major on 5/24/2015.
@@ -12,5 +14,7 @@ import com.levi9.daggerexample.ui.MainActivityFragment;
 @Component (modules = ExampleModule.class)
 public interface ExampleComponent {
 
-    void inject(MainActivityFragment mainActivityFragment);
+    void inject(MainFragment mainFragment);
+
+    void inject(CommunicationManager communicationManager);
 }

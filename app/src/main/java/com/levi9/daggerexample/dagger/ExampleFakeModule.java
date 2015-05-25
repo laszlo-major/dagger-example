@@ -1,9 +1,7 @@
 package com.levi9.daggerexample.dagger;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import com.levi9.daggerexample.communication.CommunicationManager;
+import com.levi9.daggerexample.communication.FakeCommunicationManager;
 import com.levi9.daggerexample.communication.WeatherMapApi;
 
 import android.content.Context;
@@ -14,25 +12,25 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
-import retrofit.converter.GsonConverter;
 
 /**
- * Created by Major on 5/24/2015.
+ * Created by l.major on 5/25/2015.
  */
 @Module
-public class ExampleModule {
+public class ExampleFakeModule {
 
     private Context mContext;
 
-    public ExampleModule(Context context) {
+    public ExampleFakeModule(Context context) {
         this.mContext = context;
     }
 
     @Singleton
     @Provides
     public CommunicationManager provideCommunication() {
-        return new CommunicationManager(mContext);
+        return new FakeCommunicationManager(mContext);
     }
+
 
     @Provides
     @Singleton
@@ -48,4 +46,5 @@ public class ExampleModule {
     public WeatherMapApi provideWeatherApi(RestAdapter restAdapter) {
         return restAdapter.create(WeatherMapApi.class);
     }
+
 }
