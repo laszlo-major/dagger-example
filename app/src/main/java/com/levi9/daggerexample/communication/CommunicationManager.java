@@ -24,7 +24,7 @@ public class CommunicationManager {
 
 
     public CommunicationManager(Context context) {
-        ((DaggerExampleApplication)context.getApplicationContext()).getComponent().inject(this);
+        ((DaggerExampleApplication) context.getApplicationContext()).getComponent().inject(this);
     }
 
     public void getCurrentWeather(String city, final WeatherResponseListener listener) {
@@ -43,7 +43,23 @@ public class CommunicationManager {
         });
     }
 
-        public String getCurrentVersion() {
+    public void getCurrentWeather(double longitude, double latitude, final WeatherResponseListener listener) {
+        mWeatherMapApi.getWeatherCoords(longitude, latitude, new Callback<WeatherData>() {
+            @Override
+            public void success(WeatherData weatherData, Response response) {
+                Log.d(TAG, "success");
+                listener.onGetWeatherSuccess(weatherData);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "error");
+                listener.onGetWeatherError(error);
+            }
+        });
+    }
+
+    public String getCurrentVersion() {
         return "Real";
     }
 

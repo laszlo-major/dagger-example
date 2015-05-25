@@ -8,7 +8,7 @@ import dagger.Component;
  * Created by l.major on 5/25/2015.
  */
 @Singleton
-@Component (modules = ExampleFakeModule.class)
-public interface ExampleFakeComponent extends ExampleComponent {
+@Component (modules = MockExampleModule.class)
+public interface MockExampleComponent extends ExampleComponent {
 
 }

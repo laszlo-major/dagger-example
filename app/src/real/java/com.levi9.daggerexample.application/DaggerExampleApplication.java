@@ -4,9 +4,9 @@ import android.app.Application;
 import android.preference.PreferenceManager;
 
 import com.levi9.daggerexample.dagger.DaggerExampleComponent;
-import com.levi9.daggerexample.dagger.DaggerExampleFakeComponent;
+import com.levi9.daggerexample.dagger.DaggerMockExampleComponent;
 import com.levi9.daggerexample.dagger.ExampleComponent;
-import com.levi9.daggerexample.dagger.ExampleFakeModule;
+import com.levi9.daggerexample.dagger.MockExampleModule;
 import com.levi9.daggerexample.dagger.ExampleModule;
 import com.levi9.daggerexample.util.Constants;
 
@@ -25,7 +25,7 @@ public class DaggerExampleApplication extends Application {
         boolean useFakeModule = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.USE_FAKE_MODULE_KEY, false);
         if (mExampleComponent == null) {
             if (useFakeModule) {
-                mExampleComponent = DaggerExampleFakeComponent.builder().exampleFakeModule(new ExampleFakeModule(this)).build();
+                mExampleComponent = DaggerMockExampleComponent.builder().exampleFakeModule(new MockExampleModule(this)).build();
             } else {
                 mExampleComponent = DaggerExampleComponent.builder().exampleModule(new ExampleModule(this)).build();
             }

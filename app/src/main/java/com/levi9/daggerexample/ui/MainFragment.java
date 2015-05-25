@@ -1,8 +1,18 @@
 package com.levi9.daggerexample.ui;
 
+import com.levi9.daggerexample.R;
+import com.levi9.daggerexample.application.DaggerExampleApplication;
+import com.levi9.daggerexample.communication.CommunicationManager;
+import com.levi9.daggerexample.communication.WeatherResponseListener;
+import com.levi9.daggerexample.model.WeatherData;
+import com.levi9.daggerexample.util.Constants;
+
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +22,6 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import javax.inject.Inject;
-
-import com.levi9.daggerexample.R;
-import com.levi9.daggerexample.application.DaggerExampleApplication;
-import com.levi9.daggerexample.communication.CommunicationManager;
-import com.levi9.daggerexample.communication.WeatherResponseListener;
-import com.levi9.daggerexample.model.WeatherData;
-import com.levi9.daggerexample.util.Constants;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -45,10 +48,15 @@ public class MainFragment extends Fragment implements WeatherResponseListener {
     @Inject
     CommunicationManager mCommunicationManager;
 
+    @Inject
+    LocationManager mLocationManager;
+
+    Location mLocation;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((DaggerExampleApplication)getActivity().getApplication()).getComponent().inject(this);
+        ((DaggerExampleApplication) getActivity().getApplication()).getComponent().inject(this);
     }
 
     public MainFragment() {
@@ -57,15 +65,30 @@ public class MainFragment extends Fragment implements WeatherResponseListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView =  inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         ButterKnife.inject(this, rootView);
         initializeCheckBox();
 
-        mCommunicationManager.getCurrentWeather("london", this);
+        mLocation = getLocation();
 
+        if (mLocation != null) {
+            mCommunicationManager.getCurrentWeather(mLocation.getLongitude(), mLocation.getLatitude(), this);
+        } else {
+            mCommunicationManager.getCurrentWeather("london", this);
+        }
         mExampleTv.setText("Module in use: " + mCommunicationManager.getCurrentVersion());
         return rootView;
+    }
+
+    private Location getLocation() {
+        Criteria criteria = new Criteria();
+        criteria.setPowerRequirement(Criteria.POWER_HIGH);
+        String provider = mLocationManager.getBestProvider(criteria, true);
+        if (provider != null && !"".equalsIgnoreCase(provider)) {
+            return mLocationManager.getLastKnownLocation(provider);
+        }
+        return null;
     }
 
     private void initializeCheckBox() {

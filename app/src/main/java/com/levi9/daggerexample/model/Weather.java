@@ -11,7 +11,6 @@ public class Weather{
     String temp_min;
 
     public String getTemp() {
-        double celsius = Float.parseFloat(temp) - 273.15;
-        return String.format("%02f", celsius);
+        return temp;
     }
 }

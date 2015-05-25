@@ -1,12 +1,14 @@
 package com.levi9.daggerexample.dagger;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import com.levi9.daggerexample.communication.CommunicationManager;
+import com.levi9.daggerexample.communication.MockCommunicationManager;
 import com.levi9.daggerexample.communication.WeatherMapApi;
 
+import org.mockito.Mockito;
+
 import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
 import android.location.LocationManager;
 
 import javax.inject.Singleton;
@@ -15,25 +17,30 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
-import retrofit.converter.GsonConverter;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
- * Created by Major on 5/24/2015.
+ * Created by l.major on 5/25/2015.
  */
 @Module
-public class ExampleModule {
+public class MockExampleModule {
 
     private Context mContext;
 
-    public ExampleModule(Context context) {
+    public MockExampleModule(Context context) {
         this.mContext = context;
     }
 
     @Singleton
     @Provides
     public CommunicationManager provideCommunication() {
-        return new CommunicationManager(mContext);
+        return new MockCommunicationManager(mContext);
     }
+
 
     @Provides
     @Singleton
@@ -53,7 +60,15 @@ public class ExampleModule {
     @Provides
     @Singleton
     public LocationManager provideLocationManager() {
-        return (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        System.setProperty("dexmaker.dexcache", mContext.getCacheDir().getPath());
+        LocationManager locationManager = Mockito.mock(LocationManager.class);
+        Location fakeLocation = new Location("fake");
+        fakeLocation.setLatitude(44.81);
+        fakeLocation.setLongitude(20.46);
+        when(locationManager.getBestProvider(any(Criteria.class), anyBoolean())).thenReturn("faaaaake");
+        when(locationManager.getLastKnownLocation(anyString())).thenReturn(fakeLocation);
+        
+        return locationManager;
     }
 
 }

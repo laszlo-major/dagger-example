@@ -15,7 +15,6 @@ apply plugin: 'com.neenbedankt.android-apt'
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
-
     defaultConfig {
         applicationId "com.levi9.daggerexample"
         minSdkVersion 15
@@ -32,6 +31,14 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+    productFlavors {
+        real {
+            applicationId 'com.levi9.daggerexample'
+        }
+        mock {
+            applicationId 'com.levi9.daggerexample'
+        }
+    }
 }
 
 dependencies {
@@ -39,10 +46,14 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.google.dagger:dagger:2.0'
     apt 'com.google.dagger:dagger-compiler:2.0'
-    provided 'org.glassfish:javax.annotation:10.0-b28'      //Necessary for the annotations
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    //Necessary for the annotations
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'org.mockito:mockito-core:1.10.19'
+    compile 'com.google.dexmaker:dexmaker:1.2'
+    compile 'com.google.dexmaker:dexmaker-mockito:1.2'
 }
